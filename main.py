@@ -1,13 +1,18 @@
+from contextlib import asynccontextmanager
 from typing import Annotated 
 
 from fastapi import FastAPI, HTTPException, Request, status, Depends
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse 
+from fastapi.exception_handlers import (
+    http_exception_handler,
+    request_validation_exception_handler,
+)
+from fastapi.exceptions import RequestValidationError 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates 
 from starlette.exceptions import HTTPException as starletteHTTPException 
 from sqlalchemy import select
-from sqlalchemy.orm import Session 
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload 
 
 import models
 from database import Base, engine, get_db
@@ -20,12 +25,20 @@ from schemas import (
     UserUpdate,
 ) 
 
-Base.metadata.create_all(bind=engine) 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    # Startup
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+    # Shutdown
+    await engine.dispose() 
+
+
+app = FastAPI(lifespan=lifespan) 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
 app.mount("/media", StaticFiles(directory="media"), name="media")
 
 templates = Jinja2Templates(directory="templates") 
@@ -33,8 +46,10 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", include_in_schema=False, name="home")
 @app.get("/posts", include_in_schema=False, name="posts")
-def home(request: Request, db: Annotated[Session, Depends(get_db)]):
-    result = db.execute(select(models.Post))
+async def home(request: Request, db: Annotated[AsyncSession, Depends(get_db)]):
+    result = await db.execute(
+        select(models.Post).options(selectinload(models.Post.author)),
+    )
     posts = result.scalars().all()
     return templates.TemplateResponse(
         request,
@@ -42,7 +57,6 @@ def home(request: Request, db: Annotated[Session, Depends(get_db)]):
         {"posts": posts, "title": "Home"},
     )
  
-
 
 @app.get("/posts/{post_id}", include_in_schema=False)
 def post_page(request: Request, post_id: int, db: Annotated[Session, Depends(get_db)]):
