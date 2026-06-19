@@ -59,8 +59,14 @@ async def home(request: Request, db: Annotated[AsyncSession, Depends(get_db)]):
  
 
 @app.get("/posts/{post_id}", include_in_schema=False)
-def post_page(request: Request, post_id: int, db: Annotated[Session, Depends(get_db)]):
-    result = db.execute(select(models.Post).where(models.Post.id == post_id))
+async def post_page(
+    request: Request, post_id: int, db: Annotated[AsyncSession, Depends(get_db)],
+):
+    result = await db.execute(
+        select(models.Post)
+        .options(selectinload(models.Post.author))
+        .where(models.Post.id == post_id),
+    )
     post = result.scalars().first()
     if post:
         title = post.title[:50]
