@@ -105,31 +105,29 @@ async def user_posts_page(
 
 
 @app.post(
-        "/api/users",
-        response_model=UserResponse,
-        status_code=status.HTTP_201_CREATED,
+    "/api/users",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
 )
-def create_user(user: UserCreate, db: Annotated[Session, Depends(get_db)]): 
-    result = db.execute(
+async def create_user(user: UserCreate, db: Annotated[AsyncSession, Depends(get_db)]):
+    result = await db.execute(
         select(models.User).where(models.User.username == user.username),
-    ) 
+    )
     existing_user = result.scalars().first()
-
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Username already exists",
         )
 
-    result = db.execute(
+    result = await db.execute(
         select(models.User).where(models.User.email == user.email),
-    ) 
+    )
     existing_email = result.scalars().first()
-
     if existing_email:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already exists",
+            detail="Email already registered",
         )
 
     new_user = models.User(
@@ -137,10 +135,9 @@ def create_user(user: UserCreate, db: Annotated[Session, Depends(get_db)]):
         email=user.email,
     )
     db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-
-    return new_user   
+    await db.commit()
+    await db.refresh(new_user)
+    return new_user 
 
 
 @app.get("/api/users/{user_id}", response_model=UserResponse)
