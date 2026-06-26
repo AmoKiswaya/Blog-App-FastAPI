@@ -12,30 +12,22 @@
     {% endif %}
     <meta name="description" content="FastAPI Tutorial">
     <meta name="author" content="Amos Kiswaya">
-
     <!-- Open Graph Tags: The title of the page for social media sharing. It can match the title tag or be more descriptive. -->
     <meta property="og:title" content="FastAPI Blog">
-
     <!-- Open Graph Tags: Typically set to "website" for static sites or "article" for content-heavy pages. -->
     <meta property="og:type" content="website">
-
     <!-- Open Graph Tags: The URL of the page, used to ensure link previews resolve to the correct page. -->
     <meta property="og:url" content="">
-
     <!-- Open Graph Tags: URL of an image that represents the page. Useful for link previews. -->
     <meta property="og:image" content="">
-
     <!-- Open Graph Tags: Provides an alternative text for the image to improve accessibility. -->
     <meta property="og:image:alt" content="">
-
     <!-- Preconnect for Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <!-- Custom Font -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
           rel="stylesheet">
-
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -46,10 +38,8 @@
     <link rel="stylesheet"
           type="text/css"
           href="{{ url_for("static", path='css/main.css') }}">
-
     <!-- Set a theme color that matches your website's primary color -->
     <meta name="theme-color" content="#527c9f">
-
     <!-- Favicon for all browsers -->
     <link rel="icon"
           href="{{ url_for('static', path='icons/favicon.ico') }}"
@@ -57,7 +47,6 @@
     <link rel="icon"
           href="{{ url_for('static', path='icons/icon.svg') }}"
           type="image/svg+xml">
-
     <!-- Apple touch icon for iOS devices -->
     <link rel="apple-touch-icon"
           sizes="180x180"
@@ -65,7 +54,6 @@
     <!-- Web app manifest for Progressive Web Apps -->
     <link rel="manifest"
           href="{{ url_for('static', path='site.webmanifest') }}">
-
     <!-- Content Security Policy: Uncomment to enhance security by restricting where content can be loaded from (useful for preventing certain attacks like XSS). Update if adding external sources (e.g., Google Fonts, Bootstrap CDN, analytics, etc). -->
     <!-- <meta http-equiv="Content-Security-Policy" content=" default-src 'self'; script-src 'self' code.jquery.com; style-src 'self' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' images.examplecdn.com; "> -->
   </head>
@@ -126,7 +114,6 @@
         </div>
       </nav>
     </header>
-
     <main role="main" class="container">
       <div class="row">
         <div class="col-md-8">
@@ -147,7 +134,6 @@
         </aside>
       </div>
     </main>
-
     <footer class="mt-auto py-3 bg-body-tertiary border-top">
       <div class="container text-center">
         <p class="text-body-secondary mb-0">
@@ -155,8 +141,6 @@
         </p>
       </div>
     </footer>
-
-
     <!-- Create Post Modal -->
     <div class="modal fade"
             id="createPostModal"
@@ -193,8 +177,6 @@
         </div>
         </div>
     </div>
-
-
     <!-- Success Modal -->
     <div class="modal fade"
             id="successModal"
@@ -219,34 +201,30 @@
         </div>
         </div>
     </div>
-
-
     <!-- Error Modal -->
-  <div class="modal fade"
-          id="errorModal"
-          tabindex="-1"
-          aria-labelledby="errorModalLabel"
-          aria-hidden="true">
-      <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title" id="errorModalLabel">Error</h5>
-          <button type="button"
-                  class="btn-close btn-close-white"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-          <p id="errorMessage" class="fs-5"></p>
-          </div>
-          <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-      </div>
-      </div>
-  </div>
-
-
+    <div class="modal fade"
+            id="errorModal"
+            tabindex="-1"
+            aria-labelledby="errorModalLabel"
+            aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="errorModalLabel">Error</h5>
+            <button type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <p id="errorMessage" class="fs-5"></p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
     <!-- Set the current year in the footer -->
     <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 
