@@ -55,7 +55,7 @@ async def create_user(user: UserCreate, db: Annotated[AsyncSession, Depends(get_
     new_user = models.User(
         username=user.username,
         email=user.email.lower(),
-        password=hash_password(user.password),
+        password_hash=hash_password(user.password),
     )
     db.add(new_user)
     await db.commit()
