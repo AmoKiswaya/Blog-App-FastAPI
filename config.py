@@ -13,4 +13,4 @@ class Settings(BaseSettings):
 
 
 
-settings = Settings() # Loaded from .env file
+settings = Settings() # type: ignore[call-arg] # Loaded from .env file
