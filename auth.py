@@ -91,3 +91,6 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
     return user
+
+
+CurrentUser = Annotated[models.User, Depends(get_current_user)] 
