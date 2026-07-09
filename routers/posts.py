@@ -62,6 +62,7 @@ async def get_post(post_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
 async def update_post_full(
     post_id: int,
     post_data: PostCreate,
+    current_user: CurrentUser,
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
     result = await db.execute(select(models.Post).where(models.Post.id == post_id))
@@ -71,20 +72,16 @@ async def update_post_full(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Post not found",
         )
-    if post_data.user_id != post.user_id:
-        result = await db.execute(
-            select(models.User).where(models.User.id == post_data.user_id),
+    
+    if post.user_id != current_user.id:
+         raise HTTPException(
+            status_code=status.HTTP_403_NOT_FOUND,
+            detail="Not authorized to update this post", 
         )
-        user = result.scalars().first()
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found",
-            )
+    
 
     post.title = post_data.title
     post.content = post_data.content
-    post.user_id = post_data.user_id
 
     await db.commit()
     await db.refresh(post, attribute_names=["author"])
