@@ -1,8 +1,17 @@
 from typing import Annotated
-from datetime import timedelta
+from datetime import timedelta, UTC, datetime
 
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile , Query
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,  
+    Depends, 
+    HTTPException, 
+    status, 
+    UploadFile, 
+    Query
+)
 from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy import delete as sql_delete 
 from sqlalchemy import select, func  
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -19,6 +28,9 @@ from schemas import(
     UserUpdate, 
     UserPrivate, 
     Token,
+    ChangePasswordRequest,
+    ForgotPasswordRequest,
+    ResetPasswordRequest, 
 )    
      
 from auth import(
@@ -26,7 +38,11 @@ from auth import(
     create_access_token,
     hash_password,
     verify_password,
+    generate_reset_token,
+    hash_reset_token, 
 )
+
+from email_utils import send_password_reset_email
 from config import settings
 from image_utils import process_profile_image, delete_profile_image
 
@@ -110,6 +126,55 @@ async def login_for_access_token(
 @router.get("/me", response_model=UserPrivate)
 async def get_current_user(current_user: CurrentUser):
    return current_user
+
+
+@router.post("/forgot-password", status_code=status.HTTP_202_ACCEPTED)
+async def forgot_password(
+    request_data: ForgotPasswordRequest,
+    background_tasks: BackgroundTasks,
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    result = await db.execute(
+        select(models.User).where(
+            func.lower(models.User.email) == request_data.email.lower(),
+        ),
+    )
+    user = result.scalars().first()
+
+    if user:
+        await db.execute(
+            sql_delete(models.PasswordResetToken).where(
+                models.PasswordResetToken.user_id == user.id,
+            ),
+        )
+
+        token = generate_reset_token()
+        token_hash = hash_reset_token(token)
+        expires_at = datetime.now(UTC) + timedelta(
+            minutes=settings.reset_token_expire_minutes
+        )
+
+        reset_token = models.PasswordResetToken(
+            user_id=user.id,
+            token_hash=token_hash,
+            expires_at=expires_at,
+        )
+        db.add(reset_token)
+        await db.commit()
+
+        background_tasks.add_task(
+            send_password_reset_email,
+            to_email=user.email,
+            username=user.username,
+            token=token,
+        )
+
+    return {
+        "message": "If an account exists with this email, you will receive password reset instructions."
+    }
+
+
+
 
 @router.get("/{user_id}", response_model=UserPublic)
 async def get_user(user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
