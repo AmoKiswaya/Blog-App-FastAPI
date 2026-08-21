@@ -14,10 +14,10 @@ POPULATE_IMAGES_DIR = Path("populate_images")
 
 USERS = [
     {
-        "username": "CoreyMSchafer",
-        "email": "CoreyMSchafer@gmail.com",
+        "username": "AmosKiswaya",
+        "email": "AmosKiswaya@gmail.com",
         "password": "TestPassword1!",
-        "image": "corey.png",
+        "image": "kobebryant.jpeg",
     },
     {
         "username": "DefaultDude",
@@ -26,38 +26,38 @@ USERS = [
         # No image - uses default
     },
     {
-        "username": "WillowTheCat",
+        "username": "PeaceMaker",
         "email": "TestEmail3@test.com",
         "password": "TestPassword3!",
-        "image": "willow.png",
+        "image": "peace.jpeg",
     },
     {
-        "username": "FarmDogs",
+        "username": "MichaelJordan",
         "email": "TestEmail4@test.com",
         "password": "TestPassword4!",
-        "image": "farmdogs.png",
+        "image": "michaeljordan.jpeg",
     },
     {
-        "username": "PoppyTheCoder",
+        "username": "CodeOn",
         "email": "TestEmail5@test.com",
         "password": "TestPassword5!",
-        "image": "poppy.png",
+        "image": "codeon.jpeg",
     },
     {
-        "username": "GoodBoyBronx",
+        "username": "ChaosMaster",
         "email": "TestEmail6@test.com",
         "password": "TestPassword6!",
-        "image": "bronx.png",
+        "image": "chaos.jpeg",
     },
 ]
-
+  
 POSTS = [
     {
         "title": "Why I Love FastAPI",
         "content": "FastAPI has completely changed how I build APIs. The automatic documentation, type hints, and async support make development so much faster. Plus, the performance is incredible!",
     },
     {
-        "title": "Corey Schafer Has the Best YouTube Tutorials!",
+        "title": "Amos Kiswaya Has the Best YouTube Tutorials!",
         "content": "This was written by a viewer and definitely not by me... I mean him. Totally not written by him, but by me... a real viewer. Seriously, check out his channel for amazing Python content.",
     },
     {
@@ -65,7 +65,7 @@ POSTS = [
         "content": "I've been struggling with async programming for months, but FastAPI's approach finally made it click. Using 'async def' for endpoints and 'await' for database calls just makes sense.",
     },
     {
-        "title": "Schafer? I Barely Know Her!",
+        "title": "Kiswaya? I Barely Know Him!",
         "content": "Is anyone actually reading these blog posts? Do they really need to say anything? I can keep going all day. At least AI can... Claude, keep going, please.",
     },
     {
