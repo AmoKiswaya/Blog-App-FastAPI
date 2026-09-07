@@ -2,8 +2,6 @@
 ### dotenv ###
 .env
 
-# populate_db file
-populate_db.py
 
 # Python-generated files
 __pycache__/
